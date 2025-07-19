@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AI Developer Prompt Enhancer</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='style.css') }}"
+        />
+    </head>
+    <body>
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch-label" for="checkbox">Dark Mode</label>
+            <label class="theme-switch">
+                <input type="checkbox" id="checkbox" />
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="container">
+            <h1>AI Developer Prompt Enhancer</h1>
+            <p class="description">
+                Enter your initial prompt ideas below, and our AI will refine it
+                for clarity, efficiency, and reduced hallucination, also
+                providing insights into potential pitfalls.
+            </p>
+
+            <form method="POST">
+                <div class="form-section">
+                    <label for="base_prompt"
+                        >Base Prompt Idea (e.g., "write a Python
+                        function"):</label
+                    >
+                    <textarea
+                        id="base_prompt"
+                        name="base_prompt"
+                        rows="3"
+                        required
+                    >
+{{ request.form.get('base_prompt', '') }}</textarea
+                    >
+                </div>
+
+                <div class="form-section">
+                    <label for="role"
+                        >Desired Role for AI (Optional, e.g., "Act as a senior
+                        Python developer"):</label
+                    >
+                    <input
+                        type="text"
+                        id="role"
+                        name="role"
+                        value="{{ request.form.get('role', '') }}"
+                    />
+                </div>
+
+                <div class="form-section">
+                    <label for="task"
+                        >Specific Task (Optional, e.g., "The function should
+                        calculate Fibonacci sequence up to N"):</label
+                    >
+                    <textarea id="task" name="task" rows="2">
+{{ request.form.get('task', '') }}</textarea
+                    >
+                </div>
+
+                <div class="form-section">
+                    <label for="format"
+                        >Desired Output Format (Optional, e.g., "Provide the
+                        code in a Markdown block"):</label
+                    >
+                    <input
+                        type="text"
+                        id="format"
+                        name="format"
+                        value="{{ request.form.get('format', '') }}"
+                    />
+                </div>
+
+                <div class="form-section" id="context-section">
+                    <label
+                        >Context (Optional - Add relevant background
+                        info):</label
+                    >
+                    <div id="context-inputs">
+                        {% for item in request.form.getlist('context[]') %}
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="context[]"
+                                value="{{ item }}"
+                                placeholder="e.g., I'm working on a Django project"
+                            />
+                            <button type="button" class="remove-input">
+                                X
+                            </button>
+                        </div>
+                        {% endfor %}
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="context[]"
+                                placeholder="e.g., I'm working on a Django project"
+                            />
+                            <button
+                                type="button"
+                                class="remove-input"
+                                style="display: none"
+                            >
+                                X
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-context">Add Context</button>
+                </div>
+
+                <div class="form-section" id="constraints-section">
+                    <label>Constraints (Optional - Set boundaries):</label>
+                    <div id="constraints-inputs">
+                        {% for item in request.form.getlist('constraint[]') %}
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="constraint[]"
+                                value="{{ item }}"
+                                placeholder="e.g., Do not use recursion"
+                            />
+                            <button type="button" class="remove-input">
+                                X
+                            </button>
+                        </div>
+                        {% endfor %}
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="constraint[]"
+                                placeholder="e.g., Do not use recursion"
+                            />
+                            <button
+                                type="button"
+                                class="remove-input"
+                                style="display: none"
+                            >
+                                X
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-constraint">
+                        Add Constraint
+                    </button>
+                </div>
+
+                <div class="form-section" id="examples-section">
+                    <label
+                        >Examples (Optional - Provide desired input/output
+                        examples):</label
+                    >
+                    <div id="examples-inputs">
+                        {% for item in request.form.getlist('example[]') %}
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="example[]"
+                                value="{{ item }}"
+                                placeholder="e.g., Input: 5, Output: [0, 1, 1, 2, 3]"
+                            />
+                            <button type="button" class="remove-input">
+                                X
+                            </button>
+                        </div>
+                        {% endfor %}
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="example[]"
+                                placeholder="e.g., Input: 5, Output: [0, 1, 1, 2, 3]"
+                            />
+                            <button
+                                type="button"
+                                class="remove-input"
+                                style="display: none"
+                            >
+                                X
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-example">Add Example</button>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    Get AI Enhanced Prompt
+                </button>
+            </form>
+
+            {% if ai_enhanced_prompt_output %}
+            <div class="output-section">
+                <h2>AI Enhanced Prompt:</h2>
+                <textarea
+                    class="prompt-output enhanced-ai-output"
+                    rows="15"
+                    readonly
+                >
+{{ ai_enhanced_prompt_output }}</textarea
+                >
+                <button onclick="copyToClipboard('enhanced-ai-output')">
+                    Copy to Clipboard
+                </button>
+            </div>
+            {% endif %} {% if ai_pitfalls_output %}
+            <div class="output-section ai-pitfalls-section">
+                <h2>Potential Pitfalls & Suggestions:</h2>
+                <textarea
+                    class="prompt-output pitfalls-output"
+                    rows="10"
+                    readonly
+                >
+{{ ai_pitfalls_output }}</textarea
+                >
+                <button onclick="copyToClipboard('pitfalls-output')">
+                    Copy to Clipboard
+                </button>
+            </div>
+            {% endif %} {% if user_assembled_prompt %}
+            <div class="output-section user-assembled-section">
+                <h2>Your Initial Assembled Prompt (for comparison):</h2>
+                <textarea
+                    class="prompt-output user-assembled-output"
+                    rows="10"
+                    readonly
+                >
+{{ user_assembled_prompt }}</textarea
+                >
+                <button onclick="copyToClipboard('user-assembled-output')">
+                    Copy to Clipboard
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <script>
+            // --- Dark Mode Toggle Logic ---
+            const checkbox = document.getElementById("checkbox");
+            const currentTheme = localStorage.getItem("theme"); // Get saved theme
+
+            if (currentTheme) {
+                document.body.classList.add(currentTheme);
+                if (currentTheme === "dark-mode") {
+                    checkbox.checked = true; // Check checkbox if dark mode is active
+                }
+            } else if (
+                window.matchMedia &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+            ) {
+                // Check for OS preference if no theme saved
+                document.body.classList.add("dark-mode");
+                checkbox.checked = true;
+            }
+
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    document.body.classList.add("dark-mode");
+                    localStorage.setItem("theme", "dark-mode");
+                } else {
+                    document.body.classList.remove("dark-mode");
+                    localStorage.setItem("theme", "light-mode"); // Or just remove item
+                }
+            });
+
+            // --- Existing Dynamic Input Logic (unchanged) ---
+            function setupDynamicInputs(
+                addButtonId,
+                inputContainerId,
+                inputName,
+                placeholderText,
+            ) {
+                const addButton = document.getElementById(addButtonId);
+                const inputContainer =
+                    document.getElementById(inputContainerId);
+
+                addButton.addEventListener("click", () => {
+                    const newDiv = document.createElement("div");
+                    newDiv.classList.add("input-group");
+                    newDiv.innerHTML = `
+                    <input type="text" name="${inputName}" placeholder="${placeholderText}">
+                    <button type="button" class="remove-input">X</button>
+                `;
+                    inputContainer.appendChild(newDiv);
+                    attachRemoveListeners();
+                });
+
+                function attachRemoveListeners() {
+                    document
+                        .querySelectorAll(".remove-input")
+                        .forEach((button) => {
+                            button.onclick = (event) => {
+                                const parent =
+                                    event.target.closest(
+                                        ".input-group",
+                                    ).parentNode;
+                                if (
+                                    parent.querySelectorAll(".input-group")
+                                        .length > 1
+                                ) {
+                                    event.target
+                                        .closest(".input-group")
+                                        .remove();
+                                } else {
+                                    const input = parent.querySelector("input");
+                                    input.value = "";
+                                    event.target.style.display = "none";
+                                }
+                            };
+                        });
+                }
+
+                attachRemoveListeners();
+
+                inputContainer.addEventListener("input", (event) => {
+                    if (event.target.tagName === "INPUT") {
+                        const removeButton = event.target.nextElementSibling;
+                        if (
+                            removeButton &&
+                            removeButton.classList.contains("remove-input")
+                        ) {
+                            if (
+                                event.target.value.trim() !== "" ||
+                                inputContainer.querySelectorAll(".input-group")
+                                    .length > 1
+                            ) {
+                                removeButton.style.display = "inline-block";
+                            } else {
+                                removeButton.style.display = "none";
+                            }
+                        }
+                    }
+                });
+
+                inputContainer
+                    .querySelectorAll(".input-group input")
+                    .forEach((input) => {
+                        const removeButton = input.nextElementSibling;
+                        if (
+                            removeButton &&
+                            removeButton.classList.contains("remove-input")
+                        ) {
+                            if (
+                                input.value.trim() !== "" ||
+                                inputContainer.querySelectorAll(".input-group")
+                                    .length > 1
+                            ) {
+                                removeButton.style.display = "inline-block";
+                            } else {
+                                removeButton.style.display = "none";
+                            }
+                        }
+                    });
+            }
+
+            setupDynamicInputs(
+                "add-context",
+                "context-inputs",
+                "context[]",
+                "e.g., I'm working on a Django project",
+            );
+            setupDynamicInputs(
+                "add-constraint",
+                "constraints-inputs",
+                "constraint[]",
+                "e.g., Do not use recursion",
+            );
+            setupDynamicInputs(
+                "add-example",
+                "examples-inputs",
+                "example[]",
+                "e.g., Input: 5, Output: [0, 1, 1, 2, 3]",
+            );
+
+            // --- Copy to Clipboard Logic (unchanged) ---
+            function copyToClipboard(elementClass) {
+                const textarea = document.querySelector(`.${elementClass}`);
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+
+                try {
+                    document.execCommand("copy");
+                    alert("Copied to clipboard!");
+                } catch (err) {
+                    console.error("Failed to copy: ", err);
+                    alert("Failed to copy. Please copy manually.");
+                }
+            }
+        </script>
+    </body>
+</html>

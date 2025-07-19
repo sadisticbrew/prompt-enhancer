@@ -1,0 +1,425 @@
+/* Color Variables (Light Mode Defaults) */
+:root {
+    --bg-color-primary: #f0f4f8; /* Body background */
+    --bg-color-secondary: #ffffff; /* Container background */
+    --bg-color-tertiary: #fdfdfd; /* Form section background */
+    --bg-color-input: #f7fafc; /* Output/Input background */
+    --text-color-primary: #334e68; /* Main text color */
+    --text-color-secondary: #526c84; /* Description text */
+    --heading-color: #2c5282; /* H1 and H2 color */
+    --label-color: #4a6785; /* Label text color */
+    --border-color-light: #e2e8f0; /* Light borders */
+    --border-color-medium: #cbd5e0; /* Input borders */
+    --shadow-color: rgba(0, 0, 0, 0.08); /* Box shadows */
+
+    --btn-primary-bg: #4299e1; /* Main button background */
+    --btn-primary-hover-bg: #3182ce;
+    --btn-submit-bg: #48bb78; /* Submit button background */
+    --btn-submit-hover-bg: #38a169;
+    --btn-copy-bg: #63b3ed; /* Copy button background */
+    --btn-copy-hover-bg: #4299e1;
+    --btn-remove-bg: #e53e3e; /* Remove button background */
+    --btn-remove-hover-bg: #c53030;
+
+    --focus-border-color: #63b3ed;
+    --focus-shadow: rgba(99, 179, 237, 0.2);
+
+    /* Specific output colors */
+    --output-bg-pitfalls: #fffaf0;
+    --output-border-pitfalls: #fed7a5;
+    --output-heading-pitfalls: #dd6b20;
+
+    --output-bg-user-assembled: #e9edf2;
+    --output-border-user-assembled: #d1d9e0;
+    --output-heading-user-assembled: #6c757d;
+}
+
+/* Dark Mode Variables */
+.dark-mode {
+    --bg-color-primary: #1a202c; /* Dark body background */
+    --bg-color-secondary: #2d3748; /* Dark container background */
+    --bg-color-tertiary: #2a3240; /* Dark form section background */
+    --bg-color-input: #1f2937; /* Dark output/input background */
+    --text-color-primary: #e2e8f0; /* Light text color */
+    --text-color-secondary: #a0aec0; /* Lighter description text */
+    --heading-color: #63b3ed; /* Brighter blue for headings */
+    --label-color: #cbd5e0; /* Lighter labels */
+    --border-color-light: #4a5568; /* Darker light borders */
+    --border-color-medium: #4a5568; /* Darker input borders */
+    --shadow-color: rgba(0, 0, 0, 0.4); /* Darker shadows */
+
+    --btn-primary-bg: #4c7c8c; /* Adjusted blues for dark mode */
+    --btn-primary-hover-bg: #3c6c7c;
+    --btn-submit-bg: #38a169; /* Still green, but perhaps a bit muted */
+    --btn-submit-hover-bg: #2f855a;
+    --btn-copy-bg: #63b3ed;
+    --btn-copy-hover-bg: #4299e1;
+    --btn-remove-bg: #e53e3e;
+    --btn-remove-hover-bg: #c53030;
+
+    --focus-border-color: #63b3ed;
+    --focus-shadow: rgba(99, 179, 237, 0.2);
+
+    /* Specific dark output colors */
+    --output-bg-pitfalls: #3a2e20; /* Darker orange background */
+    --output-border-pitfalls: #a06e30;
+    --output-heading-pitfalls: #f6ad55;
+
+    --output-bg-user-assembled: #28303f; /* Darker gray background */
+    --output-border-user-assembled: #4a5568;
+    --output-heading-user-assembled: #a0aec0;
+}
+
+/* General Body Styles */
+body {
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color-primary); /* Use variable */
+    color: var(--text-color-primary); /* Use variable */
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease; /* Smooth transition for theme change */
+}
+
+/* Main Container */
+.container {
+    max-width: 960px;
+    margin: 30px auto;
+    background-color: var(--bg-color-secondary); /* Use variable */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px var(--shadow-color); /* Use variable */
+    transition:
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* Headings and Descriptions */
+h1 {
+    text-align: center;
+    color: var(--heading-color); /* Use variable */
+    margin-bottom: 15px;
+    font-size: 2.2em;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.description {
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color-secondary); /* Use variable */
+    font-size: 1.05rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: color 0.3s ease;
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 25px;
+    background-color: var(--bg-color-tertiary); /* Use variable */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color-light); /* Use variable */
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--label-color); /* Use variable */
+    font-size: 1.05rem;
+    transition: color 0.3s ease;
+}
+
+/* Input Fields and Textareas */
+input[type="text"],
+textarea {
+    width: calc(100% - 22px);
+    padding: 12px;
+    border: 1px solid var(--border-color-medium); /* Use variable */
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    color: var(--text-color-primary); /* Use variable */
+    background-color: var(--bg-color-input); /* Use variable */
+    transition:
+        border-color 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out,
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: var(--focus-border-color); /* Use variable */
+    box-shadow: 0 0 0 3px var(--focus-shadow); /* Use variable */
+    outline: none;
+}
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Dynamic Input Groups (Context, Constraints, Examples) */
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-group input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.remove-input {
+    background-color: var(--btn-remove-bg); /* Use variable */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+    transition: background-color 0.2s ease-in-out;
+    min-width: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 38px;
+}
+
+.remove-input:hover {
+    background-color: var(--btn-remove-hover-bg); /* Use variable */
+}
+
+/* Buttons */
+button {
+    background-color: var(--btn-primary-bg); /* Use variable */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 15px;
+    transition:
+        background-color 0.2s ease-in-out,
+        transform 0.1s ease-in-out;
+    box-shadow: 0 2px 5px var(--shadow-color); /* Use variable */
+}
+
+button:hover {
+    background-color: var(--btn-primary-hover-bg); /* Use variable */
+    transform: translateY(-1px);
+}
+
+/* Submit Button */
+.submit-button {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    font-size: 1.3rem;
+    margin-top: 40px;
+    background-color: var(--btn-submit-bg); /* Use variable */
+    box-shadow: 0 4px 10px rgba(72, 187, 120, 0.3); /* This specific shadow is based on a green color, can be made into a variable if needed */
+}
+
+.submit-button:hover {
+    background-color: var(--btn-submit-hover-bg); /* Use variable */
+    transform: translateY(-2px);
+}
+
+/* Output Sections */
+.output-section {
+    margin-top: 50px;
+    border-top: 1px solid var(--border-color-light); /* Use variable */
+    padding-top: 35px;
+}
+
+.output-section h2 {
+    color: var(--heading-color); /* Use variable */
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: 600;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.prompt-output {
+    width: 100%;
+    min-height: 200px;
+    background-color: var(--bg-color-input); /* Use variable */
+    border: 1px solid var(--border-color-medium); /* Use variable */
+    border-radius: 8px;
+    padding: 20px;
+    font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* This shadow is very subtle, can be variable too */
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Specific styling for AI pitfalls section */
+.ai-pitfalls-section h2 {
+    color: var(--output-heading-pitfalls); /* Use variable */
+}
+.ai-pitfalls-section .pitfalls-output {
+    background-color: var(--output-bg-pitfalls); /* Use variable */
+    border-color: var(--output-border-pitfalls); /* Use variable */
+}
+
+/* Styling for user's initial prompt (for comparison) */
+.user-assembled-section h2 {
+    color: var(--output-heading-user-assembled); /* Use variable */
+}
+.user-assembled-section .user-assembled-output {
+    /* Corrected class for textarea */
+    background-color: var(--output-bg-user-assembled); /* Use variable */
+    border-color: var(--output-border-user-assembled); /* Use variable */
+}
+
+/* Copy to Clipboard Button below output */
+.output-section button {
+    display: block;
+    width: 180px;
+    margin: 0 auto;
+    background-color: var(--btn-copy-bg); /* Use variable */
+    margin-top: 0;
+}
+
+.output-section button:hover {
+    background-color: var(--btn-copy-hover-bg); /* Use variable */
+}
+
+/* Dark Mode Toggle Switch Styling */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align to right */
+    margin-bottom: 20px;
+    padding-right: 20px; /* Some padding from right edge */
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: 0.4s;
+    width: 26px;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196f3; /* Blue when checked (dark mode) */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.theme-switch-label {
+    margin-right: 10px;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    transition: color 0.3s ease;
+}
+
+/* Responsive Adjustments (Basic) */
+@media (max-width: 768px) {
+    .container {
+        padding: 25px;
+        margin: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .description {
+        font-size: 0.95rem;
+        margin-bottom: 30px;
+    }
+
+    .submit-button {
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+
+    .output-section h2 {
+        font-size: 1.5em;
+    }
+
+    .output-section button {
+        width: 100%;
+    }
+    .theme-switch-wrapper {
+        justify-content: center; /* Center toggle on small screens */
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 15px;
+        margin: 10px;
+    }
+    input[type="text"],
+    textarea {
+        width: calc(100% - 20px);
+    }
+}
