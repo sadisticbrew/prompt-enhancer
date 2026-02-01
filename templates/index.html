@@ -3,256 +3,282 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>AI Developer Prompt Enhancer</title>
+        <title>AI Prompt Enhancer</title>
         <link
             rel="stylesheet"
             href="{{ url_for('static', filename='style.css') }}"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
     </head>
     <body>
-        <div class="theme-switch-wrapper">
-            <label class="theme-switch-label" for="checkbox">Dark Mode</label>
-            <label class="theme-switch">
-                <input type="checkbox" id="checkbox" />
-                <span class="slider round"></span>
-            </label>
-        </div>
+        <nav class="navbar">
+            <div class="brand">
+                Prompt<span class="highlight">Engineer</span>
+            </div>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" aria-label="Toggle Dark Mode">
+                    <input type="checkbox" id="checkbox" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </nav>
 
         <div class="container">
-            <h1>AI Developer Prompt Enhancer</h1>
-            <p class="description">
-                Enter your initial prompt ideas below, and our AI will refine it
-                for clarity, efficiency, and reduced hallucination, also
-                providing insights into potential pitfalls.
-            </p>
+            <header class="hero">
+                <h1>Refine your logic.</h1>
+                <p class="subtitle">
+                    Transform basic ideas into bulletproof LLM prompts.
+                </p>
+            </header>
 
-            <form method="POST">
-                <div class="form-section">
-                    <label for="base_prompt"
-                        >Base Prompt Idea (e.g., "write a Python
-                        function"):</label
-                    >
+            <form method="POST" class="main-form">
+                <div class="form-group primary-group">
+                    <label for="base_prompt">What do you want to build?</label>
                     <textarea
                         id="base_prompt"
                         name="base_prompt"
                         rows="3"
+                        placeholder="e.g. Write a Python script to scrape stock prices..."
                         required
                     >
 {{ request.form.get('base_prompt', '') }}</textarea
                     >
                 </div>
 
-                <div class="form-section">
-                    <label for="role"
-                        >Desired Role for AI (Optional, e.g., "Act as a senior
-                        Python developer"):</label
-                    >
-                    <input
-                        type="text"
-                        id="role"
-                        name="role"
-                        value="{{ request.form.get('role', '') }}"
-                    />
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="role">AI Persona</label>
+                        <input
+                            type="text"
+                            id="role"
+                            name="role"
+                            value="{{ request.form.get('role', '') }}"
+                            placeholder="e.g. Senior DevOps Engineer"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="format">Output Format</label>
+                        <input
+                            type="text"
+                            id="format"
+                            name="format"
+                            value="{{ request.form.get('format', '') }}"
+                            placeholder="e.g. Markdown, JSON, CSV"
+                        />
+                    </div>
                 </div>
 
-                <div class="form-section">
-                    <label for="task"
-                        >Specific Task (Optional, e.g., "The function should
-                        calculate Fibonacci sequence up to N"):</label
+                <div class="form-group">
+                    <label for="task">Specific Task Details</label>
+                    <textarea
+                        id="task"
+                        name="task"
+                        rows="2"
+                        placeholder="e.g. The script should run every hour and save to a CSV..."
                     >
-                    <textarea id="task" name="task" rows="2">
 {{ request.form.get('task', '') }}</textarea
                     >
                 </div>
 
-                <div class="form-section">
-                    <label for="format"
-                        >Desired Output Format (Optional, e.g., "Provide the
-                        code in a Markdown block"):</label
-                    >
-                    <input
-                        type="text"
-                        id="format"
-                        name="format"
-                        value="{{ request.form.get('format', '') }}"
-                    />
-                </div>
-
-                <div class="form-section" id="context-section">
-                    <label
-                        >Context (Optional - Add relevant background
-                        info):</label
-                    >
-                    <div id="context-inputs">
-                        {% for item in request.form.getlist('context[]') %}
-                        <div class="input-group">
-                            <input
-                                type="text"
-                                name="context[]"
-                                value="{{ item }}"
-                                placeholder="e.g., I'm working on a Django project"
-                            />
-                            <button type="button" class="remove-input">
-                                X
-                            </button>
-                        </div>
-                        {% endfor %}
-                        <div class="input-group">
-                            <input
-                                type="text"
-                                name="context[]"
-                                placeholder="e.g., I'm working on a Django project"
-                            />
+                <div class="dynamic-sections">
+                    <div class="form-group" id="context-section">
+                        <div class="label-row">
+                            <label>Context</label>
                             <button
                                 type="button"
-                                class="remove-input"
-                                style="display: none"
+                                id="add-context"
+                                class="btn-text"
                             >
-                                X
+                                + Add
                             </button>
+                        </div>
+                        <div id="context-inputs" class="dynamic-list">
+                            {% for item in request.form.getlist('context[]') %}
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    name="context[]"
+                                    value="{{ item }}"
+                                />
+                                <button type="button" class="remove-input">
+                                    ×
+                                </button>
+                            </div>
+                            {% endfor %}
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    name="context[]"
+                                    placeholder="e.g. Using Python 3.11"
+                                />
+                                <button
+                                    type="button"
+                                    class="remove-input"
+                                    style="display: none"
+                                >
+                                    ×
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <button type="button" id="add-context">Add Context</button>
-                </div>
 
-                <div class="form-section" id="constraints-section">
-                    <label>Constraints (Optional - Set boundaries):</label>
-                    <div id="constraints-inputs">
-                        {% for item in request.form.getlist('constraint[]') %}
-                        <div class="input-group">
-                            <input
-                                type="text"
-                                name="constraint[]"
-                                value="{{ item }}"
-                                placeholder="e.g., Do not use recursion"
-                            />
-                            <button type="button" class="remove-input">
-                                X
-                            </button>
-                        </div>
-                        {% endfor %}
-                        <div class="input-group">
-                            <input
-                                type="text"
-                                name="constraint[]"
-                                placeholder="e.g., Do not use recursion"
-                            />
+                    <div class="form-group" id="constraints-section">
+                        <div class="label-row">
+                            <label>Constraints</label>
                             <button
                                 type="button"
-                                class="remove-input"
-                                style="display: none"
+                                id="add-constraint"
+                                class="btn-text"
                             >
-                                X
+                                + Add
                             </button>
+                        </div>
+                        <div id="constraints-inputs" class="dynamic-list">
+                            {% for item in request.form.getlist('constraint[]')
+                            %}
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    name="constraint[]"
+                                    value="{{ item }}"
+                                />
+                                <button type="button" class="remove-input">
+                                    ×
+                                </button>
+                            </div>
+                            {% endfor %}
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    name="constraint[]"
+                                    placeholder="e.g. No external libraries"
+                                />
+                                <button
+                                    type="button"
+                                    class="remove-input"
+                                    style="display: none"
+                                >
+                                    ×
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <button type="button" id="add-constraint">
-                        Add Constraint
-                    </button>
-                </div>
 
-                <div class="form-section" id="examples-section">
-                    <label
-                        >Examples (Optional - Provide desired input/output
-                        examples):</label
-                    >
-                    <div id="examples-inputs">
-                        {% for item in request.form.getlist('example[]') %}
-                        <div class="input-group">
-                            <input
-                                type="text"
-                                name="example[]"
-                                value="{{ item }}"
-                                placeholder="e.g., Input: 5, Output: [0, 1, 1, 2, 3]"
-                            />
-                            <button type="button" class="remove-input">
-                                X
-                            </button>
-                        </div>
-                        {% endfor %}
-                        <div class="input-group">
-                            <input
-                                type="text"
-                                name="example[]"
-                                placeholder="e.g., Input: 5, Output: [0, 1, 1, 2, 3]"
-                            />
+                    <div class="form-group" id="examples-section">
+                        <div class="label-row">
+                            <label>Examples</label>
                             <button
                                 type="button"
-                                class="remove-input"
-                                style="display: none"
+                                id="add-example"
+                                class="btn-text"
                             >
-                                X
+                                + Add
                             </button>
                         </div>
+                        <div id="examples-inputs" class="dynamic-list">
+                            {% for item in request.form.getlist('example[]') %}
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    name="example[]"
+                                    value="{{ item }}"
+                                />
+                                <button type="button" class="remove-input">
+                                    ×
+                                </button>
+                            </div>
+                            {% endfor %}
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    name="example[]"
+                                    placeholder="e.g. Input: A, Output: B"
+                                />
+                                <button
+                                    type="button"
+                                    class="remove-input"
+                                    style="display: none"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <button type="button" id="add-example">Add Example</button>
                 </div>
 
                 <button type="submit" class="submit-button">
-                    Get AI Enhanced Prompt
+                    Enhance Prompt ✨
                 </button>
             </form>
 
             {% if ai_enhanced_prompt_output %}
-            <div class="output-section">
-                <h2>AI Enhanced Prompt:</h2>
-                <textarea
-                    class="prompt-output enhanced-ai-output"
-                    rows="15"
-                    readonly
-                >
+            <div class="results-wrapper">
+                <div class="output-card enhanced">
+                    <div class="card-header">
+                        <h2>Enhanced Prompt</h2>
+                        <button
+                            class="btn-icon"
+                            onclick="copyToClipboard('enhanced-ai-output')"
+                            title="Copy"
+                        >
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <rect
+                                    x="9"
+                                    y="9"
+                                    width="13"
+                                    height="13"
+                                    rx="2"
+                                    ry="2"
+                                ></rect>
+                                <path
+                                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                                ></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <textarea class="prompt-output enhanced-ai-output" readonly>
 {{ ai_enhanced_prompt_output }}</textarea
-                >
-                <button onclick="copyToClipboard('enhanced-ai-output')">
-                    Copy to Clipboard
-                </button>
-            </div>
-            {% endif %} {% if ai_pitfalls_output %}
-            <div class="output-section ai-pitfalls-section">
-                <h2>Potential Pitfalls & Suggestions:</h2>
-                <textarea
-                    class="prompt-output pitfalls-output"
-                    rows="10"
-                    readonly
-                >
+                    >
+                </div>
+
+                {% if ai_pitfalls_output %}
+                <div class="output-card pitfalls">
+                    <div class="card-header">
+                        <h2>Analysis & Pitfalls</h2>
+                    </div>
+                    <textarea class="prompt-output pitfalls-output" readonly>
 {{ ai_pitfalls_output }}</textarea
-                >
-                <button onclick="copyToClipboard('pitfalls-output')">
-                    Copy to Clipboard
-                </button>
-            </div>
-            {% endif %} {% if user_assembled_prompt %}
-            <div class="output-section user-assembled-section">
-                <h2>Your Initial Assembled Prompt (for comparison):</h2>
-                <textarea
-                    class="prompt-output user-assembled-output"
-                    rows="10"
-                    readonly
-                >
-{{ user_assembled_prompt }}</textarea
-                >
-                <button onclick="copyToClipboard('user-assembled-output')">
-                    Copy to Clipboard
-                </button>
+                    >
+                </div>
+                {% endif %}
             </div>
             {% endif %}
         </div>
 
         <script>
-            // --- Dark Mode Toggle Logic ---
+            // --- Dark Mode Logic ---
             const checkbox = document.getElementById("checkbox");
-            const currentTheme = localStorage.getItem("theme"); // Get saved theme
 
-            if (currentTheme) {
-                document.body.classList.add(currentTheme);
-                if (currentTheme === "dark-mode") {
-                    checkbox.checked = true; // Check checkbox if dark mode is active
-                }
-            } else if (
-                window.matchMedia &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches
-            ) {
-                // Check for OS preference if no theme saved
+            // Check local storage or system preference
+            const savedTheme = localStorage.getItem("theme");
+            const systemDark = window.matchMedia(
+                "(prefers-color-scheme: dark)",
+            ).matches;
+
+            if (savedTheme === "dark" || (!savedTheme && systemDark)) {
                 document.body.classList.add("dark-mode");
                 checkbox.checked = true;
             }
@@ -260,134 +286,95 @@
             checkbox.addEventListener("change", () => {
                 if (checkbox.checked) {
                     document.body.classList.add("dark-mode");
-                    localStorage.setItem("theme", "dark-mode");
+                    localStorage.setItem("theme", "dark");
                 } else {
                     document.body.classList.remove("dark-mode");
-                    localStorage.setItem("theme", "light-mode"); // Or just remove item
+                    localStorage.setItem("theme", "light");
                 }
             });
 
-            // --- Existing Dynamic Input Logic (unchanged) ---
+            // --- Dynamic Inputs Logic ---
             function setupDynamicInputs(
                 addButtonId,
-                inputContainerId,
+                containerId,
                 inputName,
-                placeholderText,
+                placeholder,
             ) {
-                const addButton = document.getElementById(addButtonId);
-                const inputContainer =
-                    document.getElementById(inputContainerId);
+                const btn = document.getElementById(addButtonId);
+                const container = document.getElementById(containerId);
 
-                addButton.addEventListener("click", () => {
-                    const newDiv = document.createElement("div");
-                    newDiv.classList.add("input-group");
-                    newDiv.innerHTML = `
-                    <input type="text" name="${inputName}" placeholder="${placeholderText}">
-                    <button type="button" class="remove-input">X</button>
-                `;
-                    inputContainer.appendChild(newDiv);
-                    attachRemoveListeners();
+                // Helper to update visibility of remove buttons
+                const updateRemoveButtons = () => {
+                    const groups = container.querySelectorAll(".input-group");
+                    groups.forEach((group) => {
+                        const input = group.querySelector("input");
+                        const removeBtn = group.querySelector(".remove-input");
+                        // Show remove if there's value OR if it's not the only input
+                        if (input.value.trim() !== "" || groups.length > 1) {
+                            removeBtn.style.display = "flex";
+                        } else {
+                            removeBtn.style.display = "none";
+                        }
+                    });
+                };
+
+                btn.addEventListener("click", () => {
+                    const div = document.createElement("div");
+                    div.className = "input-group";
+                    div.innerHTML = `
+                        <input type="text" name="${inputName}" placeholder="${placeholder}">
+                        <button type="button" class="remove-input">×</button>
+                    `;
+                    container.appendChild(div);
+                    updateRemoveButtons();
                 });
 
-                function attachRemoveListeners() {
-                    document
-                        .querySelectorAll(".remove-input")
-                        .forEach((button) => {
-                            button.onclick = (event) => {
-                                const parent =
-                                    event.target.closest(
-                                        ".input-group",
-                                    ).parentNode;
-                                if (
-                                    parent.querySelectorAll(".input-group")
-                                        .length > 1
-                                ) {
-                                    event.target
-                                        .closest(".input-group")
-                                        .remove();
-                                } else {
-                                    const input = parent.querySelector("input");
-                                    input.value = "";
-                                    event.target.style.display = "none";
-                                }
-                            };
-                        });
-                }
+                container.addEventListener("click", (e) => {
+                    if (e.target.classList.contains("remove-input")) {
+                        const group = e.target.closest(".input-group");
+                        const allGroups =
+                            container.querySelectorAll(".input-group");
 
-                attachRemoveListeners();
-
-                inputContainer.addEventListener("input", (event) => {
-                    if (event.target.tagName === "INPUT") {
-                        const removeButton = event.target.nextElementSibling;
-                        if (
-                            removeButton &&
-                            removeButton.classList.contains("remove-input")
-                        ) {
-                            if (
-                                event.target.value.trim() !== "" ||
-                                inputContainer.querySelectorAll(".input-group")
-                                    .length > 1
-                            ) {
-                                removeButton.style.display = "inline-block";
-                            } else {
-                                removeButton.style.display = "none";
-                            }
+                        if (allGroups.length > 1) {
+                            group.remove();
+                        } else {
+                            // If it's the last one, just clear it
+                            group.querySelector("input").value = "";
                         }
+                        updateRemoveButtons();
                     }
                 });
 
-                inputContainer
-                    .querySelectorAll(".input-group input")
-                    .forEach((input) => {
-                        const removeButton = input.nextElementSibling;
-                        if (
-                            removeButton &&
-                            removeButton.classList.contains("remove-input")
-                        ) {
-                            if (
-                                input.value.trim() !== "" ||
-                                inputContainer.querySelectorAll(".input-group")
-                                    .length > 1
-                            ) {
-                                removeButton.style.display = "inline-block";
-                            } else {
-                                removeButton.style.display = "none";
-                            }
-                        }
-                    });
+                container.addEventListener("input", updateRemoveButtons);
             }
 
             setupDynamicInputs(
                 "add-context",
                 "context-inputs",
                 "context[]",
-                "e.g., I'm working on a Django project",
+                "e.g. Using Python 3.11",
             );
             setupDynamicInputs(
                 "add-constraint",
                 "constraints-inputs",
                 "constraint[]",
-                "e.g., Do not use recursion",
+                "e.g. No external libraries",
             );
             setupDynamicInputs(
                 "add-example",
                 "examples-inputs",
                 "example[]",
-                "e.g., Input: 5, Output: [0, 1, 1, 2, 3]",
+                "e.g. Input: A, Output: B",
             );
 
-            // --- Copy to Clipboard Logic (unchanged) ---
-            function copyToClipboard(elementClass) {
-                const textarea = document.querySelector(`.${elementClass}`);
-                textarea.select();
-                textarea.setSelectionRange(0, 99999);
-
+            // --- Clipboard Logic ---
+            async function copyToClipboard(className) {
+                const el = document.querySelector("." + className);
                 try {
-                    document.execCommand("copy");
-                    alert("Copied to clipboard!");
+                    await navigator.clipboard.writeText(el.value);
+                    // Visual feedback could go here
                 } catch (err) {
-                    console.error("Failed to copy: ", err);
-                    alert("Failed to copy. Please copy manually.");
+                    console.error("Failed to copy", err);
                 }
             }
         </script>
